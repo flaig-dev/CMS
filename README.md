@@ -1,2 +1,2 @@
-# flaig-dev-CMS
+# CMS
 Generic CMS
