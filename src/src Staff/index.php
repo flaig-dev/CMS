@@ -1,3 +1,17 @@
+<?php
+// Initialize the session
+session_start();
+ 
+// Check if the user is logged in, otherwise redirect to login page
+if(!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true){
+    header("location: login.php");
+    exit;
+}
+ 
+// Include config file
+require_once "includes/db.php";
+
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -17,7 +31,7 @@
 <body class="sb-nav-fixed">
   <nav class="sb-topnav navbar navbar-expand navbar-dark bg-dark">
     <!-- Navbar Brand-->
-    <a class="navbar-brand ps-3" href="index.html">Branding</a><!--Future DB Content-->
+    <a class="navbar-brand ps-3" href="index.php">Branding</a><!--Future DB Content-->
     <!-- Sidebar Toggle-->
     <button class="btn btn-link btn-sm order-1 order-lg-0 me-4 me-lg-0" id="sidebarToggle" href="#!"><i class="fas fa-bars"></i></button>
     <!-- Navbar-->
@@ -25,8 +39,8 @@
       <li class="nav-item dropdown">
         <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false"><i class="fas fa-user fa-fw"></i></a>
         <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
-          <li><a class="dropdown-item" href="login.html">Login</a></li>
-          <li><a class="dropdown-item" href="logout.html">Logout</a></li>
+          <li><a class="dropdown-item" href="login.php">Login</a></li>
+          <li><a class="dropdown-item" href="logout.php">Logout</a></li>
         </ul>
       </li>
     </ul>
@@ -37,7 +51,7 @@
         <div class="sb-sidenav-menu">
           <div class="nav">
             <div class="sb-sidenav-menu-heading">Manage Users</div>
-            <a class="nav-link" href="users.html">
+            <a class="nav-link" href="users.php">
               <div class="sb-nav-link-icon"><i class="fas fa-user fa-fw"></i></div>
               Users
             </a>
@@ -49,9 +63,9 @@
             </a>
             <div class="collapse" id="collapseSubjects" aria-labelledby="headingOne" data-bs-parent="#sidenavAccordion">
               <nav class="sb-sidenav-menu-nested nav">
-                <a class="nav-link" href="createsubjects.html">Create Subjects</a>
-                <a class="nav-link" href="editsubjects.html">Edit Subjects</a>
-                <a class="nav-link" href="deletesubjects.html">Delete Subjects</a>
+                <a class="nav-link" href="createsubjects.php">Create Subjects</a>
+                <a class="nav-link" href="editsubjects.php">Edit Subjects</a>
+                <a class="nav-link" href="deletesubjects.php">Delete Subjects</a>
               </nav>
             </div>
             <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapsePages" aria-expanded="false" aria-controls="collapsePages">
@@ -61,9 +75,9 @@
             </a>
             <div class="collapse" id="collapsePages" aria-labelledby="headingTwo" data-bs-parent="#sidenavAccordion">
               <nav class="sb-sidenav-menu-nested nav">
-                <a class="nav-link" href="createpages.html">Create Pages</a>
-                <a class="nav-link" href="editpages.html">Edit Pages</a>
-                <a class="nav-link" href="deletepages.html">Delete Pages</a>
+                <a class="nav-link" href="createpages.php">Create Pages</a>
+                <a class="nav-link" href="editpages.php">Edit Pages</a>
+                <a class="nav-link" href="deletepages.php">Delete Pages</a>
               </nav>
             </div>
           </div>
