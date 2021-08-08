@@ -10,6 +10,15 @@ if(!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true){
  
 // Include config file
 require_once "includes/db.php";
+include_once 'includes/dbPDO.php';
+include_once 'classes/subject.php';
+
+$database = new Database();
+$db = $database->getConnection();
+
+$items = new Subject($db);
+
+$stmt = $items->getSubjects();
 
 ?>
 
@@ -96,6 +105,31 @@ require_once "includes/db.php";
           <ol class="breadcrumb mb-4">
             <li class="breadcrumb-item active">Flavor Text Branding</li><!--Future DB Content-->
           </ol>
+        </div>
+        <div class="container">
+            <div class="card push-top">
+            <div class="card-header">
+                Subjects
+            </div>
+            <div class="card-body">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                    <th scope="col">Title</th>
+                    <th scope="col">AdminID</th>
+                    <th scope="col">Date Created</th>
+                    <th scope="col">Options</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php   while($row = $stmt->fetch()) {
+                                echo "<tr><td scope='row'>" . $row['title'] . "</td><td>" . $row['adminId'] . "</td><td>" . $row['dateCreated'] . "</td><td><a href='deletesubject.php?id={$row['id']}'>Delete</a></td></tr>";
+                            } 
+                    ?>
+                </tbody>
+            </table>
+            </div>
+            </div>
         </div>
       </main>
       <footer class="py-4 bg-light mt-auto">

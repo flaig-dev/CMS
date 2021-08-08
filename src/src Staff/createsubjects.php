@@ -10,6 +10,31 @@ if(!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true){
  
 // Include config file
 require_once "includes/db.php";
+include_once 'includes/dbPDO.php';
+include_once 'classes/subject.php';
+
+$database = new Database();
+$db = $database->getConnection();
+
+$items = new Subject($db);
+
+$stmt = $items->getSubjects();
+
+$newItem = new Subject($db);
+
+if (isset($_POST["title"])) {
+    $newItem->title  = $_POST["title"];
+} 
+else {
+    $newItem->title = null;
+}
+            
+if (isset($_POST["adminId"])) {
+    $newItem->adminId  = $_POST["adminId"];
+} 
+else {
+    $newItem->adminId = null;
+}
 
 ?>
 
@@ -97,6 +122,57 @@ require_once "includes/db.php";
             <li class="breadcrumb-item active">Flavor Text Branding</li><!--Future DB Content-->
           </ol>
         </div>
+        <div class="container">
+            <div class="card push-top">
+            <div class="card-header">
+                Subjects
+            </div>
+            <div class="card-body">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                    <th scope="col">Title</th>
+                    <th scope="col">AdminID</th>
+                    <th scope="col">Date Created</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php   while($row = $stmt->fetch()) {
+                                echo "<tr><td scope='row'>" . $row['title'] . "</td><td>" . $row['adminId'] . "</td><td>" . $row['dateCreated'] . "</td></tr>";
+                            } 
+                    ?>
+                </tbody>
+            </table>
+            </div>
+            </div>
+        </div>
+        <div class="container"></br></br></div>
+              <div class="container">
+            <div class="card push-top">
+            <div class="card-header">
+                Add Subject
+            </div>
+
+            <div class="card-body">
+                <form method="post" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>">
+                    <div class="form-group">
+                        <input type="hidden" class="form-control" name="adminId" value="<?php echo $_SESSION["id"] ?>" required/>
+                    </div>
+                    <div class="form-group">
+                        <label for="title">Title</label>
+                        <input type="text" class="form-control" name="title" required/>
+                    </div>
+                    <button type="submit" class="btn btn-block btn-danger">Submit</button>
+                </form>
+                <?php
+                    if($newItem->createSubject()){
+                        echo "Subject added successfully. <a href='createsubjects.php'>Click Here to refresh list.</a>";
+                    }
+                ?>
+            </div>
+            </div>
+          </div>
+
       </main>
       <footer class="py-4 bg-light mt-auto">
         <div class="container-fluid px-4">

@@ -16,9 +16,11 @@ include_once 'classes/subject.php';
 $database = new Database();
 $db = $database->getConnection();
 
-$items = new Subject($db);
+$item = new Subject($db);
 
-$stmt = $items->getSubjects();
+$item->id = isset($_GET['id']) ? $_GET['id'] : die();
+
+$item->getSingleSubject();
 
 ?>
 
@@ -28,7 +30,7 @@ $stmt = $items->getSubjects();
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
-  <meta name="description" content="WEBD-325-45 Project: Edit Subjects" />
+  <meta name="description" content="WEBD-325-45 Project: Delete Subject" />
   <meta name="author" content="Matthew R. Flaig" />
   <title>Branding - Staff</title><!--Future DB Content-->
   <!-- Favicon-->
@@ -41,7 +43,7 @@ $stmt = $items->getSubjects();
 <body class="sb-nav-fixed">
   <nav class="sb-topnav navbar navbar-expand navbar-dark bg-dark">
     <!-- Navbar Brand-->
-    <a class="navbar-brand ps-3" href="index.php">Branding: Edit Subjects</a><!--Future DB Content-->
+    <a class="navbar-brand ps-3" href="index.php">Branding: Delete Subject</a><!--Future DB Content-->
     <!-- Sidebar Toggle-->
     <button class="btn btn-link btn-sm order-1 order-lg-0 me-4 me-lg-0" id="sidebarToggle" href="#!"><i class="fas fa-bars"></i></button>
     <!-- Navbar-->
@@ -109,7 +111,7 @@ $stmt = $items->getSubjects();
         <div class="container">
             <div class="card push-top">
             <div class="card-header">
-                Subjects
+                Delete Subject
             </div>
             <div class="card-body">
             <table class="table table-striped">
@@ -117,20 +119,31 @@ $stmt = $items->getSubjects();
                     <tr>
                     <th scope="col">Title</th>
                     <th scope="col">AdminID</th>
-                    <th scope="col">Date Created</th>
-                    <th scope="col">Options</th>
+                    <th scope="col">Date Created</th>>
                     </tr>
                 </thead>
                 <tbody>
-                    <?php   while($row = $stmt->fetch()) {
-                                echo "<tr><td scope='row'>" . $row['title'] . "</td><td>" . $row['adminId'] . "</td><td>" . $row['dateCreated'] . "</td><td><a href='editsubject.php?id={$row['id']}'>Edit</a></td></tr>";
-                            } 
+                    <?php
+                                echo "<tr><td scope='row'>" . $item->title . "</td><td>" . $item->adminId . "</td><td>" . $item->dateCreated . "</td></tr>";
                     ?>
                 </tbody>
             </table>
             </div>
+            <div class="card-footer">
+                <form method="post" action="postdeletesubject.php">
+                    <div class="form-group">
+                        <input type="hidden" class="form-control" name="id" value="<?php echo $item->id ?>" required/>
+                    </div>
+                    <div class="card text-right">
+                    <button type="submit" class="btn btn-block btn-danger">Delete</button>
+                    </div>
+                    <div class="card text-right">
+                        <a href='index.php' class="btn btn-block btn-primary">Cancel & Return Home</a>
+                    </div>
+                </form>
             </div>
-        </div>
+            </div>
+      </div>
       </main>
       <footer class="py-4 bg-light mt-auto">
         <div class="container-fluid px-4">
