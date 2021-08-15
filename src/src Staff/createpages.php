@@ -10,6 +10,45 @@ if(!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true){
  
 // Include config file
 require_once "includes/db.php";
+include_once 'includes/dbPDO.php';
+include_once 'classes/page.php';
+
+$database = new Database();
+$db = $database->getConnection();
+
+$items = new Page($db);
+
+$stmt = $items->getPages();
+
+$newItem = new Page($db);
+
+if (isset($_POST["title"])) {
+    $newItem->title  = $_POST["title"];
+} 
+else {
+    $newItem->title = null;
+}
+
+if (isset($_POST["textBody"])) {
+    $newItem->textBody  = $_POST["textBody"];
+} 
+else {
+    $newItem->textBody = null;
+}       
+
+if (isset($_POST["adminId"])) {
+    $newItem->adminId  = $_POST["adminId"];
+} 
+else {
+    $newItem->adminId = null;
+}
+
+if (isset($_POST["subjectId"])) {
+    $newItem->subjectId  = $_POST["subjectId"];
+} 
+else {
+    $newItem->subjectId = null;
+}
 
 ?>
 
@@ -97,6 +136,62 @@ require_once "includes/db.php";
             <li class="breadcrumb-item active">Flavor Text Branding</li><!--Future DB Content-->
           </ol>
         </div>
+        <div class="container">
+            <div class="card push-top">
+            <div class="card-header">
+                Pages
+            </div>
+            <div class="card-body">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                    <th scope="col">Title</th>
+                    <th scope="col">TextBody</th>
+                    <th scope="col">AdminID</th>
+                    <th scope="col">SubjectID</th>
+                    <th scope="col">Date Created</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php   while($row = $stmt->fetch()) {
+                                echo "<tr><td scope='row'>" . $row['title'] . "</td><td>" . $row['textBody'] . "</td><td>" . $row['adminId'] . "</td><td>" . $row['subjectId'] . "</td><td>" . $row['dateCreated'] . "</td></tr>";
+                            } 
+                    ?>
+                </tbody>
+            </table>
+            </div>
+            </div>
+        </div>
+        <div class="container"></br></br></div>
+              <div class="container">
+            <div class="card push-top">
+            <div class="card-header">
+                Add Page
+            </div>
+
+            <div class="card-body">
+                <form method="post" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>">
+                    <div class="form-group">
+                        <input type="hidden" class="form-control" name="adminId" value="<?php echo $_SESSION["id"] ?>" required/>
+                    </div>
+                    <div class="form-group">
+                        <label for="title">Title</label>
+                        <input type="text" class="form-control" name="title" required/>
+                        <label for="textBody">TextBody</label>
+                        <input type="text" class="form-control" name="textBody" required/>
+                        <label for="subjectId">SubjectID</label>
+                        <input type="number" class="form-control" name="subjectId" required/>
+                    </div>
+                    <button type="submit" class="btn btn-block btn-danger">Submit</button>
+                </form>
+                <?php
+                    if($newItem->createPage()){
+                        echo "Page added successfully. <a href='createpages.php'>Click Here to refresh list.</a>";
+                    }
+                ?>
+            </div>
+            </div>
+          </div>
       </main>
       <footer class="py-4 bg-light mt-auto">
         <div class="container-fluid px-4">

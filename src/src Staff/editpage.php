@@ -16,9 +16,11 @@ include_once 'classes/page.php';
 $database = new Database();
 $db = $database->getConnection();
 
-$items = new Page($db);
+$item = new Page($db);
 
-$stmt = $items->getPages();
+$item->id = isset($_GET['id']) ? $_GET['id'] : die();
+
+$item->getSinglePage();
 
 ?>
 
@@ -41,7 +43,7 @@ $stmt = $items->getPages();
 <body class="sb-nav-fixed">
   <nav class="sb-topnav navbar navbar-expand navbar-dark bg-dark">
     <!-- Navbar Brand-->
-    <a class="navbar-brand ps-3" href="index.php">Branding: Edit Pages</a><!--Future DB Content-->
+    <a class="navbar-brand ps-3" href="index.php">Branding: Edit Page</a><!--Future DB Content-->
     <!-- Sidebar Toggle-->
     <button class="btn btn-link btn-sm order-1 order-lg-0 me-4 me-lg-0" id="sidebarToggle" href="#!"><i class="fas fa-bars"></i></button>
     <!-- Navbar-->
@@ -109,27 +111,25 @@ $stmt = $items->getPages();
         <div class="container">
             <div class="card push-top">
             <div class="card-header">
-                Pages
+                Edit Page
             </div>
             <div class="card-body">
-            <table class="table table-striped">
-                <thead>
-                    <tr>
-                    <th scope="col">Title</th>
-                    <th scope="col">TextBody</th>
-                    <th scope="col">AdminID</th>
-                    <th scope="col">SubjectID</th>
-                    <th scope="col">Date Created</th>
-                    <th scope="col">Options</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <?php   while($row = $stmt->fetch()) {
-                               echo "<tr><td scope='row'>" . $row['title'] . "</td><td>" . $row['textBody'] . "</td><td>" . $row['adminId'] . "</td><td>" . $row['subjectId'] . "</td><td>" . $row['dateCreated'] . "</td><td><a href='editpage.php?id={$row['id']}'>Edit</a></td></tr>";
-                            } 
-                    ?>
-                </tbody>
-            </table>
+                <form method="post" action="posteditpage.php">
+                    <div class="form-group">
+                        <input type="hidden" class="form-control" name="id" value="<?php echo $item->id ?>" required/>
+                        <input type="hidden" class="form-control" name="adminId" value="<?php echo $_SESSION["id"] ?>" required/>
+                    </div>
+                    <div class="form-group">
+                        <label for="title">Title</label>
+                        <input type="text" class="form-control" name="title" placeholder="<?php echo $item->title ?>" required/>
+                        <label for="textBody">TextBody</label>
+                        <input type="text" class="form-control" name="textBody" placeholder="<?php echo $item->textBody ?>" required/>
+                        <label for="subjectId">SubjectId</label>
+                        <input type="number" class="form-control" name="subjectId" placeholder="<?php echo $item->subjectId ?>" required/>
+
+                    </div>
+                    <button type="submit" class="btn btn-block btn-danger">Submit</button>
+                </form>
             </div>
             </div>
         </div>
